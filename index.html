@@ -2,8 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام REEFTEK الاحترافي لإصدار البطاقات</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>نظام REEFTEK - تصميم ناعم واحترافي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -17,44 +17,45 @@
 
         body {
             font-family: 'Cairo', sans-serif;
-            background-color: #e2e8f0;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
             margin: 0;
-            padding: 40px 20px;
+            padding: 30px 15px;
             display: flex;
+            flex-direction: column; /* لعرض العناصر بشكل عمودي */
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
-            background-size: 20px 20px;
         }
 
         .dashboard {
             display: flex;
-            gap: 40px;
+            gap: 30px;
             background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            padding: 25px;
+            border-radius: 24px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.08);
             max-width: 1200px;
             width: 100%;
             flex-wrap: wrap;
+            box-sizing: border-box;
         }
 
         .controls {
             flex: 1;
-            min-width: 350px;
+            min-width: 300px;
             background: #f8fafc;
             padding: 30px;
-            border-radius: 16px;
+            border-radius: 20px;
             border: 1px solid #e2e8f0;
+            box-sizing: border-box;
         }
         
         .controls h2 {
             color: var(--primary-blue);
             margin-top: 0;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             font-weight: 900;
-            font-size: 24px;
+            font-size: 22px;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -84,9 +85,9 @@
             width: 100%;
             padding: 14px;
             border: 2px solid #e2e8f0;
-            border-radius: 10px;
+            border-radius: 12px;
             font-family: 'Cairo', sans-serif;
-            font-size: 15px;
+            font-size: 16px; 
             box-sizing: border-box;
             background: white;
             transition: all 0.3s;
@@ -95,39 +96,37 @@
         .input-group input:focus {
             outline: none;
             border-color: var(--primary-blue);
-            box-shadow: 0 0 0 3px rgba(30, 43, 94, 0.1);
+            box-shadow: 0 0 0 4px rgba(30, 43, 94, 0.1);
         }
 
         input[type="file"] {
-            padding: 10px;
+            padding: 12px;
             background: #f1f5f9;
             cursor: pointer;
+            font-size: 14px;
+            color: #64748b;
         }
 
         .download-btn {
             background-color: var(--primary-red);
             color: white;
             border: none;
-            padding: 16px;
+            padding: 18px;
             width: 100%;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 18px;
             font-weight: 900;
             cursor: pointer;
-            margin-top: 15px;
+            margin-top: 20px;
             font-family: 'Cairo', sans-serif;
             transition: all 0.3s;
-            box-shadow: 0 10px 20px rgba(227, 34, 40, 0.25);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
+            box-shadow: 0 10px 20px rgba(227, 34, 40, 0.2);
         }
 
-        .download-btn:hover {
+        .download-btn:active, .download-btn:hover {
             background-color: #c11b22;
-            transform: translateY(-3px);
-            box-shadow: 0 15px 25px rgba(227, 34, 40, 0.35);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px rgba(227, 34, 40, 0.3);
         }
 
         .card-preview {
@@ -135,26 +134,48 @@
             justify-content: center;
             align-items: center;
             background: #0f172a;
-            padding: 40px;
-            border-radius: 16px;
+            padding: 40px 10px;
+            border-radius: 20px;
             position: relative;
+            width: 100%;
+            flex: 1;
+            min-width: 300px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .card-scaler {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            transition: transform 0.3s ease;
         }
 
         .id-card {
             width: 400px;
             height: 637px;
-            background-color: #fafbfc;
+            background-color: #ffffff;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
             display: flex;
             flex-direction: column;
             align-items: center;
             box-sizing: border-box;
+            border-radius: 16px; 
         }
 
-        .wave-tr { position: absolute; top: 0; right: 0; width: 220px; height: 220px; z-index: 1; }
-        .wave-bl { position: absolute; bottom: 0; left: 0; width: 260px; height: 260px; z-index: 1; }
+        .wave-tl, .wave-tr, .wave-bl, .wave-br {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            z-index: 1;
+        }
+        .wave-tl { top: 0; left: 0; }
+        .wave-tr { top: 0; right: 0; }
+        .wave-bl { bottom: 0; left: 0; }
+        .wave-br { bottom: 0; right: 0; }
 
         .card-content {
             position: relative;
@@ -164,48 +185,51 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 45px 20px 20px 20px;
+            padding: 50px 25px 25px 25px;
             box-sizing: border-box;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 35px;
             width: 100%;
             z-index: 3;
-            height: 90px;
+            height: 85px;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
         #company-logo {
-            max-width: 85%;
+            max-width: 80%;
             max-height: 100%;
             object-fit: contain;
+            background: rgba(255, 255, 255, 0.85); 
+            padding: 8px 15px;
+            border-radius: 12px;
         }
 
         .profile-pic {
-            width: 210px;
-            height: 210px;
+            width: 190px;
+            height: 190px;
             border-radius: 50%;
-            background-color: #fff;
-            background-image: url('https://via.placeholder.com/210x210.png?text=الصورة');
+            background-color: #f1f5f9;
+            background-image: url('https://via.placeholder.com/190x190.png?text=الصورة');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             position: relative;
             z-index: 3;
-            border: 6px solid var(--primary-blue);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            margin-bottom: 20px;
+            border: 4px solid var(--primary-blue);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
         }
         
         .profile-pic::before {
             content: '';
             position: absolute;
-            top: -12px; left: -12px; right: -12px; bottom: -12px;
-            border: 2px solid var(--gold);
+            top: -10px; left: -10px; right: -10px; bottom: -10px;
+            border: 1.5px solid var(--gold);
             border-radius: 50%;
         }
 
@@ -220,30 +244,30 @@
         }
 
         #card-name {
-            font-size: 44px;
+            font-size: 42px;
             font-weight: 900;
-            color: #0f172a;
-            margin: 0 0 10px 0;
-            line-height: 1.1;
+            color: #1e293b;
+            margin: 0 0 8px 0;
+            line-height: 1.2;
         }
 
         #card-job {
             font-size: 20px;
             font-weight: 700;
-            color: #475569;
+            color: #64748b;
             margin: 0 0 20px 0;
         }
 
         .bottom-section {
             display: flex;
-            justify-content: center; /* توسيط رقم الهوية */
+            justify-content: center;
             align-items: center;
-            width: 85%;
+            width: 80%;
             margin: 0 auto;
             margin-top: auto;
-            margin-bottom: 20px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0,0,0,0.06);
         }
 
         #card-id {
@@ -251,8 +275,42 @@
             font-weight: 900;
             color: var(--primary-blue);
             margin: 0;
-            letter-spacing: 1px;
-            font-family: Arial, sans-serif;
+            letter-spacing: 1.5px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* تنسيق حقوق المبرمج */
+        .developer-credit {
+            margin-top: 25px;
+            color: #64748b;
+            font-size: 15px;
+            font-weight: 600;
+            text-align: center;
+        }
+        .developer-credit span {
+            color: var(--primary-red);
+            font-weight: 900;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 20px 10px; }
+            .dashboard { padding: 15px; gap: 20px; border-radius: 16px; }
+            .controls { padding: 20px 15px; }
+        }
+
+        @media (max-width: 480px) {
+            .card-scaler {
+                transform: scale(0.75); 
+                transform-origin: center top;
+                height: 480px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .card-scaler {
+                transform: scale(0.65); 
+                height: 420px;
+            }
         }
     </style>
 </head>
@@ -260,7 +318,7 @@
 
 <div class="dashboard">
     <div class="controls">
-        <h2>نظام إصدار البطاقات</h2>
+        <h2>إصدار البطاقات (طباعة عالية الدقة)</h2>
         
         <div class="input-group">
             <label>الاسم الكامل للموظف</label>
@@ -268,60 +326,76 @@
         </div>
         
         <div class="input-group">
-            <label>المسمى الوظيفي (عربي أو إنجليزي)</label>
+            <label>المسمى الوظيفي</label>
             <input type="text" id="input-job" placeholder="مثال: مهندس تقنية المعلومات" onkeyup="updateCard()" value="مهندس تقنية المعلومات">
         </div>
         
         <div class="input-group">
             <label>رقم هوية الموظف</label>
-            <input type="text" id="input-id" placeholder="مثال: 2254756487" onkeyup="updateCard()" value="2254756487">
+            <input type="number" id="input-id" placeholder="مثال: 2254756487" onkeyup="updateCard()" value="2254756487">
         </div>
         
         <div class="input-group">
-            <label>الصورة الشخصية (تُقص تلقائياً وبدقة)</label>
+            <label>الصورة الشخصية (تُقص تلقائياً لدائرة ناعمة)</label>
             <input type="file" id="input-image" accept="image/*" onchange="previewProfilePic(event)">
         </div>
         
         <div class="input-group" style="margin-top: 10px; border-top: 1px dashed #cbd5e1; padding-top: 15px;">
-            <label style="color: #64748b; font-size: 12px;">(اختياري) رفع الشعار إذا لم تقم بتسميته logo.png</label>
+            <label style="color: #64748b; font-size: 12px;">(اختياري) رفع الشعار يدوياً إذا لزم الأمر</label>
             <input type="file" accept="image/*" onchange="previewLogo(event)">
         </div>
 
-        <button class="download-btn" onclick="generateAccuratePDF()">طباعة البطاقة (PDF عالي الدقة)</button>
+        <button class="download-btn" onclick="generateAccuratePDF()">تحميل وطباعة البطاقة PDF</button>
     </div>
 
     <div class="card-preview">
-        <div class="id-card" id="print-area">
-            
-            <svg class="wave-tr" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-                <path fill="var(--primary-red)" d="M50,0 C100,70 140,130 200,180 L200,0 Z" />
-                <path fill="var(--primary-blue)" d="M110,0 C150,50 170,90 200,120 L200,0 Z" />
-            </svg>
+        <div class="card-scaler">
+            <div class="id-card" id="print-area">
+                
+                <svg class="wave-tl" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="var(--primary-red)" d="M160,0 Q80,60 0,160 L0,0 Z" />
+                    <path fill="var(--primary-blue)" d="M100,0 Q50,40 0,100 L0,0 Z" />
+                </svg>
 
-            <svg class="wave-bl" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-                <path fill="var(--primary-red)" d="M0,30 C60,90 100,140 160,200 L0,200 Z" />
-                <path fill="var(--primary-blue)" d="M0,90 C30,130 60,160 100,200 L0,200 Z" />
-            </svg>
-            
-            <div class="card-content">
-                <div class="header">
-                    <img id="company-logo" src="logo.png" alt="REEFTEK Logo">
-                </div>
+                <svg class="wave-tr" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="var(--primary-red)" d="M40,0 Q120,60 200,160 L200,0 Z" />
+                    <path fill="var(--primary-blue)" d="M100,0 Q150,40 200,100 L200,0 Z" />
+                </svg>
+
+                <svg class="wave-bl" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="var(--primary-red)" d="M0,40 Q80,140 160,200 L0,200 Z" />
+                    <path fill="var(--primary-blue)" d="M0,100 Q50,160 100,200 L0,200 Z" />
+                </svg>
+
+                <svg class="wave-br" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="var(--primary-red)" d="M200,40 Q120,140 40,200 L200,200 Z" />
+                    <path fill="var(--primary-blue)" d="M200,100 Q150,160 100,200 L200,200 Z" />
+                </svg>
                 
-                <div class="profile-pic" id="profile-div"></div>
-                
-                <div class="employee-data">
-                    <p id="card-name">هاشم صلاح</p>
-                    <p id="card-job">مهندس تقنية المعلومات</p>
+                <div class="card-content">
+                    <div class="header">
+                        <img id="company-logo" src="logo.png" alt="REEFTEK Logo">
+                    </div>
                     
-                    <div class="bottom-section">
-                        <!-- تم إضافة كلمة ID قبل الرقم -->
-                        <p id="card-id">ID: 2254756487</p>
+                    <div class="profile-pic" id="profile-div"></div>
+                    
+                    <div class="employee-data">
+                        <p id="card-name">هاشم صلاح</p>
+                        <p id="card-job">مهندس تقنية المعلومات</p>
+                        
+                        <div class="bottom-section">
+                            <p id="card-id">ID: 2254756487</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<!-- إضافة حقوق المبرمج -->
+<div class="developer-credit">
+    صُنع من قبل <span>سعيد عبدالله</span>
 </div>
 
 <script>
@@ -332,7 +406,6 @@
         
         document.getElementById('card-name').innerText = name ? name : 'اسم الموظف';
         document.getElementById('card-job').innerText = job ? job : 'المسمى الوظيفي';
-        // إضافة كلمة ID قبل الرقم تلقائياً
         document.getElementById('card-id').innerText = id ? 'ID: ' + id : 'ID: ';
     }
 
