@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام REEFTEK الاحترافي لإصدار البطاقات</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-blue: #1e2b5e;
+            --primary-red: #e32228;
+            --gold: #d4af37;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #e2e8f0;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .dashboard {
+            display: flex;
+            gap: 40px;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            max-width: 1200px;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+
+        .controls {
+            flex: 1;
+            min-width: 350px;
+            background: #f8fafc;
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .controls h2 {
+            color: var(--primary-blue);
+            margin-top: 0;
+            margin-bottom: 30px;
+            font-weight: 900;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .controls h2::before {
+            content: '';
+            width: 6px;
+            height: 25px;
+            background: var(--primary-red);
+            border-radius: 4px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: #475569;
+            font-size: 14px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 15px;
+            box-sizing: border-box;
+            background: white;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(30, 43, 94, 0.1);
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            background: #f1f5f9;
+            cursor: pointer;
+        }
+
+        .download-btn {
+            background-color: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 16px;
+            width: 100%;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 900;
+            cursor: pointer;
+            margin-top: 15px;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s;
+            box-shadow: 0 10px 20px rgba(227, 34, 40, 0.25);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .download-btn:hover {
+            background-color: #c11b22;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(227, 34, 40, 0.35);
+        }
+
+        .card-preview {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #0f172a;
+            padding: 40px;
+            border-radius: 16px;
+            position: relative;
+        }
+
+        .id-card {
+            width: 400px;
+            height: 637px;
+            background-color: #fafbfc;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .wave-tr { position: absolute; top: 0; right: 0; width: 220px; height: 220px; z-index: 1; }
+        .wave-bl { position: absolute; bottom: 0; left: 0; width: 260px; height: 260px; z-index: 1; }
+
+        .card-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 45px 20px 20px 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            width: 100%;
+            z-index: 3;
+            height: 90px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #company-logo {
+            max-width: 85%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .profile-pic {
+            width: 210px;
+            height: 210px;
+            border-radius: 50%;
+            background-color: #fff;
+            background-image: url('https://via.placeholder.com/210x210.png?text=الصورة');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            z-index: 3;
+            border: 6px solid var(--primary-blue);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            margin-bottom: 20px;
+        }
+        
+        .profile-pic::before {
+            content: '';
+            position: absolute;
+            top: -12px; left: -12px; right: -12px; bottom: -12px;
+            border: 2px solid var(--gold);
+            border-radius: 50%;
+        }
+
+        .employee-data {
+            text-align: center;
+            width: 100%;
+            z-index: 3;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        #card-name {
+            font-size: 44px;
+            font-weight: 900;
+            color: #0f172a;
+            margin: 0 0 10px 0;
+            line-height: 1.1;
+        }
+
+        #card-job {
+            font-size: 20px;
+            font-weight: 700;
+            color: #475569;
+            margin: 0 0 20px 0;
+        }
+
+        .bottom-section {
+            display: flex;
+            justify-content: center; /* توسيط رقم الهوية */
+            align-items: center;
+            width: 85%;
+            margin: 0 auto;
+            margin-top: auto;
+            margin-bottom: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        #card-id {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--primary-blue);
+            margin: 0;
+            letter-spacing: 1px;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard">
+    <div class="controls">
+        <h2>نظام إصدار البطاقات</h2>
+        
+        <div class="input-group">
+            <label>الاسم الكامل للموظف</label>
+            <input type="text" id="input-name" placeholder="مثال: هاشم صلاح" onkeyup="updateCard()" value="هاشم صلاح">
+        </div>
+        
+        <div class="input-group">
+            <label>المسمى الوظيفي (عربي أو إنجليزي)</label>
+            <input type="text" id="input-job" placeholder="مثال: مهندس تقنية المعلومات" onkeyup="updateCard()" value="مهندس تقنية المعلومات">
+        </div>
+        
+        <div class="input-group">
+            <label>رقم هوية الموظف</label>
+            <input type="text" id="input-id" placeholder="مثال: 2254756487" onkeyup="updateCard()" value="2254756487">
+        </div>
+        
+        <div class="input-group">
+            <label>الصورة الشخصية (تُقص تلقائياً وبدقة)</label>
+            <input type="file" id="input-image" accept="image/*" onchange="previewProfilePic(event)">
+        </div>
+        
+        <div class="input-group" style="margin-top: 10px; border-top: 1px dashed #cbd5e1; padding-top: 15px;">
+            <label style="color: #64748b; font-size: 12px;">(اختياري) رفع الشعار إذا لم تقم بتسميته logo.png</label>
+            <input type="file" accept="image/*" onchange="previewLogo(event)">
+        </div>
+
+        <button class="download-btn" onclick="generateAccuratePDF()">طباعة البطاقة (PDF عالي الدقة)</button>
+    </div>
+
+    <div class="card-preview">
+        <div class="id-card" id="print-area">
+            
+            <svg class="wave-tr" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                <path fill="var(--primary-red)" d="M50,0 C100,70 140,130 200,180 L200,0 Z" />
+                <path fill="var(--primary-blue)" d="M110,0 C150,50 170,90 200,120 L200,0 Z" />
+            </svg>
+
+            <svg class="wave-bl" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+                <path fill="var(--primary-red)" d="M0,30 C60,90 100,140 160,200 L0,200 Z" />
+                <path fill="var(--primary-blue)" d="M0,90 C30,130 60,160 100,200 L0,200 Z" />
+            </svg>
+            
+            <div class="card-content">
+                <div class="header">
+                    <img id="company-logo" src="logo.png" alt="REEFTEK Logo">
+                </div>
+                
+                <div class="profile-pic" id="profile-div"></div>
+                
+                <div class="employee-data">
+                    <p id="card-name">هاشم صلاح</p>
+                    <p id="card-job">مهندس تقنية المعلومات</p>
+                    
+                    <div class="bottom-section">
+                        <!-- تم إضافة كلمة ID قبل الرقم -->
+                        <p id="card-id">ID: 2254756487</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateCard() {
+        const name = document.getElementById('input-name').value;
+        const job = document.getElementById('input-job').value;
+        const id = document.getElementById('input-id').value;
+        
+        document.getElementById('card-name').innerText = name ? name : 'اسم الموظف';
+        document.getElementById('card-job').innerText = job ? job : 'المسمى الوظيفي';
+        // إضافة كلمة ID قبل الرقم تلقائياً
+        document.getElementById('card-id').innerText = id ? 'ID: ' + id : 'ID: ';
+    }
+
+    function previewProfilePic(event) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            document.getElementById('profile-div').style.backgroundImage = `url(${reader.result})`;
+        }
+        if(event.target.files[0]) {
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    }
+
+    function previewLogo(event) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            document.getElementById('company-logo').src = reader.result;
+        }
+        if(event.target.files[0]) {
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    }
+
+    async function generateAccuratePDF() {
+        const element = document.getElementById('print-area');
+        const name = document.getElementById('input-name').value || 'بطاقة_موظف';
+        
+        window.scrollTo(0, 0);
+
+        const canvas = await html2canvas(element, {
+            scale: 4, 
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: '#ffffff'
+        });
+
+        const imgData = canvas.toDataURL('image/png', 1.0);
+        
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: [54, 86]
+        });
+
+        pdf.addImage(imgData, 'PNG', 0, 0, 54, 86);
+        pdf.save(name + '.pdf');
+    }
+</script>
+
+</body>
+</html>
