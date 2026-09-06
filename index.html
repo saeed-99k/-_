@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>نظام REEFTEK - تصميم ناعم واحترافي</title>
+    <title>نظام REEFTEK - بطاقة عصرية حديثة</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -21,7 +21,7 @@
             margin: 0;
             padding: 30px 15px;
             display: flex;
-            flex-direction: column; /* لعرض العناصر بشكل عمودي */
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
@@ -185,16 +185,16 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 50px 25px 25px 25px;
+            padding: 40px 25px 20px 25px;
             box-sizing: border-box;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 35px;
+            margin-bottom: 25px;
             width: 100%;
             z-index: 3;
-            height: 85px;
+            height: 75px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -204,33 +204,34 @@
             max-width: 80%;
             max-height: 100%;
             object-fit: contain;
-            background: rgba(255, 255, 255, 0.85); 
-            padding: 8px 15px;
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.9); 
+            padding: 6px 12px;
+            border-radius: 10px;
         }
 
+        /* تعديل الصورة الشخصية لتصبح مربعة عصرية بحواف منحنية وإطار أنيق */
         .profile-pic {
-            width: 190px;
-            height: 190px;
-            border-radius: 50%;
+            width: 170px;
+            height: 200px;
+            border-radius: 14px;
             background-color: #f1f5f9;
-            background-image: url('https://via.placeholder.com/190x190.png?text=الصورة');
+            background-image: url('https://via.placeholder.com/170x200.png?text=الصورة');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             position: relative;
             z-index: 3;
             border: 4px solid var(--primary-blue);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-            margin-bottom: 25px;
+            box-shadow: 0 12px 30px rgba(30, 43, 94, 0.15);
+            margin-bottom: 20px;
         }
         
         .profile-pic::before {
             content: '';
             position: absolute;
-            top: -10px; left: -10px; right: -10px; bottom: -10px;
+            top: -8px; left: -8px; right: -8px; bottom: -8px;
             border: 1.5px solid var(--gold);
-            border-radius: 50%;
+            border-radius: 18px;
         }
 
         .employee-data {
@@ -244,18 +245,18 @@
         }
 
         #card-name {
-            font-size: 42px;
+            font-size: 38px;
             font-weight: 900;
             color: #1e293b;
-            margin: 0 0 8px 0;
-            line-height: 1.2;
+            margin: 0 0 6px 0;
+            line-height: 1.15;
         }
 
         #card-job {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             color: #64748b;
-            margin: 0 0 20px 0;
+            margin: 0 0 15px 0;
         }
 
         .bottom-section {
@@ -266,12 +267,12 @@
             margin: 0 auto;
             margin-top: auto;
             margin-bottom: 10px;
-            padding-top: 20px;
+            padding-top: 15px;
             border-top: 1px solid rgba(0,0,0,0.06);
         }
 
         #card-id {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 900;
             color: var(--primary-blue);
             margin: 0;
@@ -279,7 +280,6 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* تنسيق حقوق المبرمج */
         .developer-credit {
             margin-top: 25px;
             color: #64748b;
@@ -318,7 +318,7 @@
 
 <div class="dashboard">
     <div class="controls">
-        <h2>إصدار البطاقات (طباعة عالية الدقة)</h2>
+        <h2>إصدار البطاقات (تصميم عصري)</h2>
         
         <div class="input-group">
             <label>الاسم الكامل للموظف</label>
@@ -336,7 +336,7 @@
         </div>
         
         <div class="input-group">
-            <label>الصورة الشخصية (تُقص تلقائياً لدائرة ناعمة)</label>
+            <label>الصورة الشخصية (مربع حصري وعصري)</label>
             <input type="file" id="input-image" accept="image/*" onchange="previewProfilePic(event)">
         </div>
         
@@ -377,6 +377,7 @@
                         <img id="company-logo" src="logo.png" alt="REEFTEK Logo">
                     </div>
                     
+                    <!-- الصورة الشخصية بالمظهر المربع الحصري والعصري -->
                     <div class="profile-pic" id="profile-div"></div>
                     
                     <div class="employee-data">
@@ -393,7 +394,6 @@
     </div>
 </div>
 
-<!-- إضافة حقوق المبرمج -->
 <div class="developer-credit">
     صُنع من قبل <span>سعيد عبدالله</span>
 </div>
