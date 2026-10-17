@@ -8,6 +8,7 @@
     <title>الريف للشحنات | REEFTEK</title>
     <link rel="icon" id="app-favicon" type="image/png">
     <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js" integrity="sha384-iLddHTLokph6Omwoyid4XKxHaWa6w41BnoEj0q5oOrzmYPpHIKt1wyjReA7s//pP" crossorigin="anonymous"></script>
+    <script src="config.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Marcellus&display=swap" rel="stylesheet">
 
     <style>
@@ -589,6 +590,98 @@
             .shipment-manager, .developer-credit, .screen, .modal, .hdr-right, .sub-actions, .save-state { display: none !important; }
             .mb-ref.is-empty { color: transparent !important; }
         }
+
+        /* =============================================================== */
+        /*  v4 — بوليصة الشحنة الخاصة بالريف                                */
+        /* =============================================================== */
+        .mini-label { display: block; margin-bottom: 6px; font-size: 12px; font-weight: 700; color: var(--text-300); }
+        .wb-fields { margin: 0 0 18px; border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; background: rgba(255,255,255,0.02); }
+        .wb-fields[hidden] { display: none; }
+        .wb-fields summary { cursor: pointer; list-style: none; padding: 11px 14px; font-size: 12.5px; font-weight: 800; color: var(--text-300); }
+        .wb-fields summary::-webkit-details-marker { display: none; }
+        .wb-fields summary::after { content: '＋'; float: left; color: var(--gold); }
+        .wb-fields[open] summary::after { content: '－'; }
+        .wb-fields-body { padding: 4px 14px 14px; display: grid; gap: 12px; }
+        .wb-fields-body input, .wb-fields-body select { width: 100%; padding: 11px 14px; border: 1px solid rgba(255,255,255,0.09); background: rgba(5,8,20,0.55); border-radius: 10px; font-family: 'Cairo', sans-serif; font-size: 14px; color: var(--text-100); }
+        .wb-fields-body input:focus, .wb-fields-body select:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,175,55,0.14); }
+        .wb-fields-body select option { background: #10152f; }
+
+        .wb-modal-box { width: min(96vw, 940px); max-height: 94vh; overflow: auto; background: linear-gradient(160deg, #10152f, #070a1a); border: 1px solid var(--panel-border); border-radius: 18px; padding: 18px 18px 22px; box-shadow: 0 30px 70px rgba(0,0,0,.6); }
+        .wb-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+        .wb-toolbar h3 { margin: 0; font-size: 16px; font-weight: 800; }
+        .wb-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+        .wb-wrap { position: relative; margin: 0 auto; background: #fff; box-shadow: 0 25px 60px rgba(0,0,0,.6); overflow: hidden; border-radius: 2px; }
+        .wb-scaler { position: absolute; top: 0; left: 0; transform-origin: 0 0; }
+        #wb-print-root { display: none; }
+
+        .wb-page { width: 210mm; height: 297mm; background: #fff; position: relative; overflow: hidden; font-family: 'Cairo', sans-serif; color: #0a0f2c; }
+        .wb-cut { position: absolute; left: 0; right: 0; top: 148.5mm; height: 0; border-top: 0.35mm dashed #94a3b8; }
+        .wb-cut span { position: absolute; top: -3.4mm; right: 10mm; background: #fff; padding: 0 2mm; font-size: 4mm; color: #94a3b8; line-height: 1; }
+        .wb { position: relative; width: 210mm; height: 148.5mm; box-sizing: border-box; padding: 7mm 9mm 4.5mm; display: flex; flex-direction: column; gap: 2.4mm; }
+        .wb-copytag { position: absolute; top: 2.2mm; left: 9mm; font-size: 2.7mm; font-weight: 800; color: #94a3b8; letter-spacing: .2mm; }
+
+        .wb-head { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 5mm; padding-bottom: 2.4mm; border-bottom: 0.7mm solid #1e2b5e; }
+        .wb-head::after { content: ''; position: absolute; right: 0; bottom: -0.7mm; width: 32mm; height: 0.7mm; background: #e32228; }
+        .wb-brand { display: flex; align-items: center; gap: 3mm; min-width: 0; }
+        .wb-brand img { height: 14mm; width: auto; object-fit: contain; }
+        .wb-brand b { display: block; font-size: 4.4mm; font-weight: 900; line-height: 1.3; }
+        .wb-brand small { display: block; font-size: 2.8mm; color: #64748b; font-weight: 700; direction: ltr; text-align: right; }
+        .wb-title { text-align: center; }
+        .wb-title h1 { margin: 0; font-size: 7.2mm; font-weight: 900; color: #e32228; line-height: 1.1; }
+        .wb-title span { font-family: 'Marcellus', serif; font-size: 3.2mm; letter-spacing: 1.6mm; color: #64748b; }
+        .wb-no { min-width: 46mm; border: 0.5mm solid #1e2b5e; border-radius: 2.5mm; padding: 1.4mm 3mm; background: #f5f7fb; }
+        .wb-no span { display: block; font-size: 2.6mm; font-weight: 700; color: #64748b; }
+        .wb-no b { display: block; font-size: 5mm; font-weight: 900; direction: ltr; text-align: right; letter-spacing: .2mm; }
+        .wb-no small { display: block; font-size: 2.8mm; color: #475569; font-weight: 700; }
+
+        .wb-parties { display: grid; grid-template-columns: 1fr 1.3fr; gap: 3mm; }
+        .wb-party { min-width: 0; border: 0.5mm solid #cfd6e4; border-radius: 2.5mm; padding: 2mm 3.5mm 2.2mm; background: #fff; }
+        .wb-party i { display: block; font-style: normal; font-size: 2.9mm; font-weight: 800; color: #e32228; margin-bottom: .5mm; }
+        .wb-party i em { font-style: normal; color: #94a3b8; font-weight: 600; }
+        .wb-party b { display: block; font-size: 4.9mm; font-weight: 900; line-height: 1.3; overflow-wrap: anywhere; }
+        .wb-party span { display: block; font-size: 3.2mm; font-weight: 600; color: #475569; margin-top: .6mm; overflow-wrap: anywhere; }
+        .wb-party u { text-decoration: none; direction: ltr; unicode-bidi: isolate; font-weight: 800; color: #0a0f2c; letter-spacing: .2mm; }
+        .wb-party.main { border: 0.7mm solid #1e2b5e; background: #f5f7fb; }
+
+        .wb-info { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3mm; }
+        .wb-money { display: grid; grid-template-columns: .8fr 1fr 1fr 1fr 1.3fr; gap: 2mm; }
+        .wb-cell { min-width: 0; border: 0.4mm solid #cfd6e4; border-radius: 2mm; padding: 1.3mm 2.5mm 1.5mm; background: #fff; }
+        .wb-cell span { display: block; font-size: 2.6mm; font-weight: 700; color: #64748b; line-height: 1.35; }
+        .wb-cell em { font-style: normal; color: #94a3b8; font-size: 2.3mm; }
+        .wb-cell b { display: block; font-size: 4mm; font-weight: 900; line-height: 1.35; overflow-wrap: anywhere; }
+        .wb-cell.num b { direction: ltr; text-align: right; }
+        .wb-cell.total { background: #0a0f2c; border-color: #0a0f2c; }
+        .wb-cell.total span { color: #d4af37; }
+        .wb-cell.total em { color: #a8b0cf; }
+        .wb-cell.total b { color: #fff; font-size: 4.7mm; }
+
+        .wb-low { flex: 1; min-height: 0; display: grid; grid-template-columns: 31mm 1fr 35mm; gap: 4mm; align-items: stretch; }
+        .wb-qr { border: 0.4mm solid #cfd6e4; border-radius: 2mm; padding: 1.5mm; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        .wb-qr .q { width: 24mm; height: 24mm; }
+        .wb-qr .q svg { width: 100%; height: 100%; display: block; }
+        .wb-qr small { margin-top: .8mm; font-size: 2.4mm; font-weight: 700; color: #64748b; line-height: 1.3; }
+        .wb-mid { display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
+        .wb-terms { margin: 0; padding: 0; list-style: none; font-size: 2.75mm; line-height: 1.7; color: #475569; font-weight: 600; }
+        .wb-terms li::before { content: '•'; color: #e32228; margin-left: 1.2mm; }
+        .wb-sign { display: flex; gap: 8mm; }
+        .wb-sign div { flex: 1; border-top: 0.35mm solid #64748b; padding-top: 1mm; font-size: 2.9mm; font-weight: 700; color: #475569; text-align: center; }
+        .wb-stamp { align-self: center; width: 100%; border: 0.9mm solid; border-radius: 3mm; padding: 2mm 1mm; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; transform: rotate(-4deg); }
+        .wb-stamp small { font-size: 2.6mm; font-weight: 700; }
+        .wb-stamp b { font-size: 5.2mm; font-weight: 900; line-height: 1.25; }
+        .ps-paid { color: #15803d; border-color: #15803d; } .ps-unpaid { color: #dc2626; border-color: #dc2626; }
+        .ps-cod { color: #b45309; border-color: #b45309; } .ps-credit { color: #475569; border-color: #475569; }
+        .ps-none { color: #94a3b8; border-color: #cbd5e1; }
+        .wb-foot { font-size: 2.6mm; color: #64748b; font-weight: 600; text-align: center; border-top: 0.3mm solid #e2e8f0; padding-top: 1.1mm; }
+        .wb-foot span + span::before { content: ' · '; }
+
+        @media print {
+            body.printing-waybill .app-shell, body.printing-waybill .zoom-overlay, body.printing-waybill .modal,
+            body.printing-waybill .viewer, body.printing-waybill .screen, body.printing-waybill .toast { display: none !important; }
+            body.printing-waybill #wb-print-root { display: block !important; position: absolute !important; top: 0; left: 0; width: 210mm; height: 297mm; }
+            body.printing-waybill #wb-print-root, body.printing-waybill #wb-print-root * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+
+        .sm-table tbody tr[data-id] { cursor: pointer; }
     </style>
 </head>
 <body>
@@ -639,7 +732,7 @@
         <pre id="setup-out">اكتب رمزًا من 6 أرقام ثم اضغط «توليد البصمة».</pre>
         <button type="button" class="s-link" style="align-self:center" onclick="copySetup()">نسخ السطر</button>
         <ol>
-            <li>الصق السطر الناتج في الملف مكان السطر <b>ACCESS_CODE_HASH</b> الحالي.</li>
+            <li>الصق السطر الناتج داخل ملف <b>config.js</b> (مكان السطر المعلّق accessCodeHash).</li>
             <li>في Supabase غيّر كلمة مرور حساب الموظفين إلى نفس الرمز الجديد.</li>
             <li>ارفع الملف على GitHub واحذف <b>#setup</b> من الرابط.</li>
         </ol>
@@ -722,6 +815,22 @@
                     <input type="number" min="1" id="input-carton-total" class="js-field" placeholder="من إجمالي" oninput="updateLabel()">
                 </div>
             </div>
+
+            <details class="wb-fields" id="wb-fields" hidden>
+                <summary>تفاصيل البوليصة <span class="muted-optional">(اختياري — تظهر في بوليصة الشحنة فقط)</span></summary>
+                <div class="wb-fields-body">
+                    <div><label class="mini-label" for="input-destination">مكان الوصول</label><input type="text" id="input-destination" placeholder="مثال: أبها" oninput="updateLabel()" autocomplete="off"></div>
+                    <div><label class="mini-label" for="input-contents">نوع الرسالية / المحتويات</label><input type="text" id="input-contents" placeholder="مثال: قطع غيار" oninput="updateLabel()" autocomplete="off"></div>
+                    <div class="pair">
+                        <div><label class="mini-label" for="input-fee">أجرة الطرد الواحد (ر.س)</label><input type="number" min="0" step="0.01" id="input-fee" oninput="updateLabel()"></div>
+                        <div><label class="mini-label" for="input-packaging">التغليف (ر.س)</label><input type="number" min="0" step="0.01" id="input-packaging" oninput="updateLabel()"></div>
+                    </div>
+                    <div class="pair">
+                        <div><label class="mini-label" for="input-cod">المسترد (ر.س)</label><input type="number" min="0" step="0.01" id="input-cod" oninput="updateLabel()"></div>
+                        <div><label class="mini-label" for="input-paystatus">حالة الدفع</label><select id="input-paystatus" onchange="updateLabel()"><option value="">غير محدد</option><option value="مدفوع">مدفوع</option><option value="غير مدفوع">غير مدفوع</option><option value="عند الاستلام">عند الاستلام</option><option value="آجل">آجل</option></select></div>
+                    </div>
+                </div>
+            </details>
 
             <div class="progress" id="progress">
                 <div class="pdots"><span class="pdot"></span><span class="pdot"></span><span class="pdot"></span><span class="pdot"></span></div>
@@ -903,6 +1012,22 @@
     </div>
 </div>
 
+<div class="modal" id="wb-modal" hidden>
+    <div class="wb-modal-box">
+        <div class="wb-toolbar">
+            <h3 id="wb-title">بوليصة الشحنة</h3>
+            <div class="wb-actions">
+                <button type="button" class="rbtn gold" onclick="printWaybill()">طباعة البوليصة</button>
+                <button type="button" class="rbtn" onclick="editFromWaybill()">تعديل البيانات</button>
+                <button type="button" class="rbtn" onclick="copyWaybillLink()">رابط التتبع</button>
+                <button type="button" class="rbtn" onclick="closeWaybill()">إغلاق</button>
+            </div>
+        </div>
+        <div class="wb-wrap" id="wb-wrap"><div class="wb-scaler" id="wb-scaler"></div></div>
+    </div>
+</div>
+<div id="wb-print-root" aria-hidden="true"></div>
+
 <div class="zoom-overlay" id="zoom-overlay" hidden onclick="closeZoom()">
     <button type="button" class="zoom-close" onclick="closeZoom()" aria-label="إغلاق">×</button>
     <div id="zoom-stage" onclick="event.stopPropagation()"></div>
@@ -916,14 +1041,21 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
 
 <script>
     /* ====================================================================
-       الإعدادات — هذا هو القسم الوحيد الذي تحتاج تعدّله
+       الإعدادات — تُقرأ من ملف config.js (لا تعدّل هنا)
        ==================================================================== */
-    const SUPABASE_URL = 'https://sefvjkaosxicjqrxbcax.supabase.co';                 // مثال: https://abcdxyz.supabase.co
-    const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_p-vchq14hqGkUknZI_-42g_7-EY2T1g';     // مثال: sb_publishable_xxxxxxxx  (مفتاح عام، آمن للنشر)
-    const STAFF_EMAIL = 'staff@reeftek.app'; // بريد حساب الموظفين في Supabase (كلمة مروره = رمز الدخول)
-    const PUBLIC_BASE_URL = 'https://saeed-99k.github.io/-_/'; // رابط الموقع المنشور (يُطبع داخل الباركود)
+    const CFG = window.REEFTEK_CONFIG || {};
+    const SUPABASE_URL = CFG.supabaseUrl || '';
+    const SUPABASE_PUBLISHABLE_KEY = CFG.supabasePublishableKey || '';
+    const STAFF_EMAIL = CFG.staffEmail || 'staff@reeftek.app';
+    const PUBLIC_BASE_URL = CFG.publicBaseUrl || 'https://saeed-99k.github.io/-_/';
     const ACCESS_SALT = 'reeftek-shipping-v1';
-    const ACCESS_CODE_HASH = 'c2cd0c2d240b4fd4d83e1e5063c3779983e304be52a815e642c9920b8277a199'; // بصمة رمز الدخول (لتغييره افتح الموقع بإضافة #setup)
+    const ACCESS_CODE_HASH = CFG.accessCodeHash || 'c2cd0c2d240b4fd4d83e1e5063c3779983e304be52a815e642c9920b8277a199';
+    const COMPANY = Object.assign({ nameAr: 'مؤسسة الريف التقني التجارية', nameEn: 'Al-Reef Al-Takni Trading Est.', branch: 'جدة', phones: [], address: '', unifiedNo: '', vatNo: '', iban: '' }, CFG.company || {});
+    const WAYBILL_TERMS = CFG.waybillTerms || [
+        'تُسلَّم الشحنة للمستلم بعد التحقق من رقم الشحنة وبيانات المستلم.',
+        'يرجى فحص الطرود عند الاستلام وإبلاغنا فورًا بأي ملاحظة.',
+        'للتتبّع أو الاستفسار امسح الباركود أو تواصل معنا على الأرقام الموضحة.'
+    ];
     const CODE_LENGTH = 6;
     const REMEMBER_HOURS = 12;
 
@@ -941,7 +1073,8 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     const LS_REMEMBER = 'reeftek_access_until_v1';
     const SS_UNLOCK = 'reeftek_access_ok_v1';
     const FIELD_IDS = ['input-store', 'input-customer', 'input-outlet', 'input-phone', 'input-carton-no', 'input-carton-total'];
-    const COLS = 'id,tracking_number,public_token,store_name,customer_name,outlet,phone,carton_number,carton_total,status,created_at,updated_at';
+    const EXTRA_IDS = ['input-destination', 'input-contents', 'input-fee', 'input-packaging', 'input-cod', 'input-paystatus'];
+    const COLS = 'id,tracking_number,public_token,store_name,customer_name,outlet,phone,carton_number,carton_total,status,created_at,updated_at,destination,contents,fee_per_carton,packaging_fee,cod_amount,payment_status';
 
     /* ---------- tiny helpers ---------- */
     const store = {
@@ -1162,7 +1295,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         const out = $('setup-out');
         if (code.length !== CODE_LENGTH) { out.textContent = 'أدخل رمزًا من ' + CODE_LENGTH + ' أرقام بالضبط.'; out.classList.remove('code'); return; }
         out.classList.add('code');
-        out.textContent = "const ACCESS_CODE_HASH = '" + codeHash(code) + "';";
+        out.textContent = "accessCodeHash: '" + codeHash(code) + "',";
     }
     function copySetup() {
         const t = $('setup-out').textContent;
@@ -1198,6 +1331,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         $('print-btn-label').textContent = online ? 'حفظ وطباعة' : 'طباعة الملصق (A4)';
         $('sub-actions').hidden = !online;
         $('shipment-manager').hidden = !online;
+        $('wb-fields').hidden = !online;
         if ((state === 'denied' || state === 'offline') && detail) toast(detail);
         updateLabel();
     }
@@ -1274,11 +1408,17 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             outlet: $('input-outlet').value.trim(),
             phone: $('input-phone').value.trim(),
             cartonNo: $('input-carton-no').value.trim(),
-            cartonTotal: $('input-carton-total').value.trim()
+            cartonTotal: $('input-carton-total').value.trim(),
+            destination: $('input-destination').value.trim(),
+            contents: $('input-contents').value.trim(),
+            fee: $('input-fee').value.trim(),
+            packaging: $('input-packaging').value.trim(),
+            cod: $('input-cod').value.trim(),
+            payStatus: $('input-paystatus').value
         };
     }
     const isEmptyForm = (v) => !v.store && !v.customer && !v.outlet && !v.phone;
-    const snapshotOf = (v) => JSON.stringify([v.store, v.customer, v.outlet, cleanPhone(v.phone), v.cartonNo, v.cartonTotal]);
+    const snapshotOf = (v) => JSON.stringify([v.store, v.customer, v.outlet, cleanPhone(v.phone), v.cartonNo, v.cartonTotal, v.destination, v.contents, v.fee, v.packaging, v.cod, v.payStatus]);
 
     function setFit(id, text, placeholder) {
         const el = $(id);
@@ -1469,6 +1609,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         $('input-phone').value = x.phone || '';
         $('input-carton-no').value = '';
         $('input-carton-total').value = '';
+        clearExtras();
         updateLabel();
         toast('تمت تعبئة البيانات');
     }
@@ -1498,7 +1639,12 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         const payload = {
             store_name: v.store, customer_name: v.customer, outlet: v.outlet, phone: cleanPhone(v.phone),
             carton_number: v.cartonNo ? parseInt(v.cartonNo, 10) : null,
-            carton_total: v.cartonTotal ? parseInt(v.cartonTotal, 10) : null
+            carton_total: v.cartonTotal ? parseInt(v.cartonTotal, 10) : null,
+            destination: v.destination, contents: v.contents,
+            fee_per_carton: v.fee !== '' ? Number(v.fee) : null,
+            packaging_fee: v.packaging !== '' ? Number(v.packaging) : null,
+            cod_amount: v.cod !== '' ? Number(v.cod) : null,
+            payment_status: v.payStatus || null
         };
         setBusy(true);
         try {
@@ -1563,7 +1709,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     }
 
     function resetLabelForm() {
-        FIELD_IDS.forEach((id) => { $(id).value = ''; });
+        FIELD_IDS.concat(EXTRA_IDS).forEach((id) => { $(id).value = ''; });
         newLabelState();
         updateLabel();
         $('input-store').focus();
@@ -1659,7 +1805,11 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         q = applyFilters(q).range(from, from + mgr.size - 1);
         const { data, count, error } = await q;
         mgr.loading = false;
-        if (error) { $('sm-body').innerHTML = '<tr><td colspan="7" class="sm-empty">تعذّر تحميل الشحنات: ' + esc(error.message) + '</td></tr>'; return; }
+        if (error) {
+            const hint = /column|42703|PGRST204/i.test((error.code || '') + ' ' + (error.message || '')) ? ' — شغّل ملف SQL المحدّث في Supabase' : '';
+            $('sm-body').innerHTML = '<tr><td colspan="7" class="sm-empty">تعذّر تحميل الشحنات: ' + esc(error.message) + esc(hint) + '</td></tr>';
+            return;
+        }
         mgr.rows = reset ? data : mgr.rows.concat(data);
         mgr.total = count == null ? mgr.rows.length : count;
         mgr.page++;
@@ -1682,7 +1832,8 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
                         STATUSES.map((s) => '<option' + (s === r.status ? ' selected' : '') + '>' + esc(s) + '</option>').join('') +
                     '</select></td>' +
                     '<td class="acts">' +
-                        '<button type="button" class="rbtn gold" data-act="open">فتح الملصق</button>' +
+                        '<button type="button" class="rbtn gold" data-act="waybill">البوليصة</button>' +
+                        '<button type="button" class="rbtn" data-act="open">فتح الملصق</button>' +
                         '<button type="button" class="rbtn" data-act="events">السجل</button>' +
                         '<button type="button" class="rbtn" data-act="link">رابط التتبع</button>' +
                     '</td>' +
@@ -1717,6 +1868,12 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         $('input-phone').value = r.phone || '';
         $('input-carton-no').value = r.carton_number || '';
         $('input-carton-total').value = r.carton_total || '';
+        $('input-destination').value = r.destination || '';
+        $('input-contents').value = r.contents || '';
+        $('input-fee').value = hasNum(r.fee_per_carton) ? r.fee_per_carton : '';
+        $('input-packaging').value = hasNum(r.packaging_fee) ? r.packaging_fee : '';
+        $('input-cod').value = hasNum(r.cod_amount) ? r.cod_amount : '';
+        $('input-paystatus').value = r.payment_status || '';
         offlineMode = false;
         currentShipment = { id: r.id, tracking_number: r.tracking_number, public_token: r.public_token };
         savedSnapshot = snapshotOf(getValues());
@@ -1770,11 +1927,13 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             all = all.concat(data);
             if (data.length < 1000) break;
         }
-        const head = ['رقم الشحنة', 'المحل', 'الزبون', 'المخرج', 'الجوال', 'رقم الكرتون', 'إجمالي الكراتين', 'الحالة', 'تاريخ الإنشاء'];
+        const head = ['رقم الشحنة', 'المحل', 'الزبون', 'المخرج', 'الجوال', 'رقم الكرتون', 'إجمالي الكراتين', 'الحالة', 'تاريخ الإنشاء', 'مكان الوصول', 'نوع الرسالية', 'أجرة الطرد', 'التغليف', 'المسترد', 'الإجمالي (لا يشمل الضريبة)', 'حالة الدفع'];
         const lines = [head.map((h) => csvCell(h)).join(',')];
         all.forEach((r) => lines.push([
             csvCell(r.tracking_number), csvCell(r.store_name), csvCell(r.customer_name), csvCell(r.outlet), csvCell(r.phone, true),
-            csvCell(r.carton_number), csvCell(r.carton_total), csvCell(r.status), csvCell(r.created_at)
+            csvCell(r.carton_number), csvCell(r.carton_total), csvCell(r.status), csvCell(r.created_at),
+            csvCell(r.destination), csvCell(r.contents), csvCell(r.fee_per_carton), csvCell(r.packaging_fee), csvCell(r.cod_amount),
+            csvCell(waybillTotals(r).total), csvCell(r.payment_status)
         ].join(',')));
         const blob = new Blob(['\ufeff' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8' });
         const a = document.createElement('a');
@@ -1805,8 +1964,13 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         });
         $('sm-body').addEventListener('click', (e) => {
             const btn = e.target.closest('[data-act]');
-            if (!btn) return;
+            if (!btn) {
+                const row = e.target.closest('tr[data-id]');
+                if (row && !e.target.closest('select, option, button, a')) openWaybill(row.dataset.id);
+                return;
+            }
             const id = btn.closest('tr').dataset.id;
+            if (btn.dataset.act === 'waybill') openWaybill(id);
             if (btn.dataset.act === 'open') openShipmentLabel(id);
             if (btn.dataset.act === 'events') showEvents(id);
             if (btn.dataset.act === 'link') {
@@ -1819,6 +1983,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
             if (sel) changeStatus(sel.dataset.statusFor, sel.value, sel);
         });
         $('events-modal').addEventListener('click', (e) => { if (e.target === $('events-modal')) closeEvents(); });
+        $('wb-modal').addEventListener('click', (e) => { if (e.target === $('wb-modal')) closeWaybill(); });
     }
 
     /* ====================================================================
@@ -1964,6 +2129,134 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     /* ====================================================================
        التشغيل
        ==================================================================== */
+    /* ====================================================================
+       بوليصة الشحنة (فاتورة الشحنة الخاصة بالريف) — تفتح بالضغط على الشحنة
+       ==================================================================== */
+    const money = (n) => Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const hasNum = (v) => v !== null && v !== undefined && v !== '' && !isNaN(Number(v));
+    const fmtDate = (iso) => { try { return new Date(iso).toLocaleDateString('ar-SA-u-ca-gregory-nu-latn', { day: 'numeric', month: 'long', year: 'numeric' }); } catch (e) { return ''; } };
+
+    function qrSvg(text) {
+        try {
+            qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
+            const qr = qrcode(0, 'M');
+            qr.addData(text);
+            qr.make();
+            return qr.createSvgTag({ cellSize: 1, margin: 0, scalable: true });
+        } catch (e) { return ''; }
+    }
+
+    function waybillTotals(r) {
+        const count = parseInt(r.carton_total, 10) > 0 ? parseInt(r.carton_total, 10) : 1;
+        const fee = hasNum(r.fee_per_carton) ? Number(r.fee_per_carton) : null;
+        const pack = hasNum(r.packaging_fee) ? Number(r.packaging_fee) : null;
+        const total = (fee === null && pack === null) ? null : (fee === null ? 0 : fee * count) + (pack === null ? 0 : pack);
+        return { count, fee, pack, total };
+    }
+
+    function waybillCopy(r, copyTitle, qr) {
+        const t = waybillTotals(r);
+        const phoneTxt = (v) => v ? esc(formatPhone(v)) : '—';
+        const cell = (label, en, value, cls) =>
+            '<div class="wb-cell ' + (cls || '') + '"><span>' + label + ' <em>' + en + '</em></span><b>' + value + '</b></div>';
+        const amount = (v) => v === null ? '—' : esc(money(v)) + ' ر.س';
+        const pkgs = r.carton_total || r.carton_number || '—';
+        const ps = r.payment_status;
+        const psCls = { 'مدفوع': 'ps-paid', 'غير مدفوع': 'ps-unpaid', 'عند الاستلام': 'ps-cod', 'آجل': 'ps-credit' }[ps] || 'ps-none';
+        const stamp = '<div class="wb-stamp ' + psCls + '"><small>' + (ps ? 'حالة الدفع' : 'حالة الشحنة') + '</small><b>' + esc(ps || r.status || '—') + '</b></div>';
+        const senderPhone = (COMPANY.phones && COMPANY.phones[0]) ? ' · جوال: <u>' + esc(formatPhone(COMPANY.phones[0])) + '</u>' : '';
+        const terms = (WAYBILL_TERMS || []).map((x) => '<li>' + esc(x) + '</li>').join('');
+        const foot = [
+            COMPANY.phones && COMPANY.phones.length ? 'هاتف: ' + COMPANY.phones.map((p) => esc(formatPhone(p))).join(' - ') : '',
+            COMPANY.address ? esc(COMPANY.address) : '',
+            COMPANY.unifiedNo ? 'الرقم الموحد: ' + esc(COMPANY.unifiedNo) : '',
+            COMPANY.vatNo ? 'الرقم الضريبي: ' + esc(COMPANY.vatNo) : '',
+            COMPANY.iban ? 'الآيبان: ' + esc(COMPANY.iban) : ''
+        ].filter(Boolean);
+
+        return '<div class="wb">' +
+            '<div class="wb-copytag">' + esc(copyTitle) + '</div>' +
+            '<div class="wb-head">' +
+                '<div class="wb-brand"><img src="' + A4_LOGO_SRC + '" alt=""><div><b>' + esc(COMPANY.nameAr) + '</b><small>' + esc(COMPANY.nameEn) + '</small></div></div>' +
+                '<div class="wb-title"><h1>بوليصة شحن</h1><span>WAYBILL</span></div>' +
+                '<div class="wb-no"><span>رقم الشحنة · No.</span><b>' + esc(r.tracking_number) + '</b><small>' + esc(fmtDate(r.created_at)) + '</small></div>' +
+            '</div>' +
+            '<div class="wb-parties">' +
+                '<div class="wb-party"><i>المرسل <em>Sender</em></i><b>' + esc(COMPANY.nameAr) + '</b><span>الفرع: ' + esc(COMPANY.branch || '—') + senderPhone + '</span></div>' +
+                '<div class="wb-party main"><i>المستلم <em>Receiver</em></i><b>' + esc(r.customer_name || r.store_name || '—') + '</b><span>' + (r.store_name && r.customer_name ? esc(r.store_name) + ' · ' : '') + 'جوال: <u>' + phoneTxt(r.phone) + '</u></span></div>' +
+            '</div>' +
+            '<div class="wb-info">' +
+                cell('المخرج', 'Carrier', esc(r.outlet || '—')) +
+                cell('مكان الوصول', 'Destination', esc(r.destination || '—')) +
+                cell('نوع الرسالية', 'Consignment', esc(r.contents || '—')) +
+            '</div>' +
+            '<div class="wb-money">' +
+                cell('عدد الطرود', 'Packages', esc(pkgs), 'num') +
+                cell('أجرة الطرد الواحد', 'Per package', amount(t.fee), 'num') +
+                cell('التغليف', 'Packaging', amount(t.pack), 'num') +
+                cell('المسترد', 'Retrieved', amount(hasNum(r.cod_amount) ? Number(r.cod_amount) : null), 'num') +
+                cell('الإجمالي (لا يشمل الضريبة)', 'Total', amount(t.total), 'num total') +
+            '</div>' +
+            '<div class="wb-low">' +
+                '<div class="wb-qr"><div class="q">' + qr + '</div><small>امسح لتتبّع الشحنة</small></div>' +
+                '<div class="wb-mid"><ul class="wb-terms">' + terms + '</ul><div class="wb-sign"><div>توقيع المستلم</div><div>توقيع المرسل</div></div></div>' +
+                stamp +
+            '</div>' +
+            (foot.length ? '<div class="wb-foot">' + foot.map((f) => '<span>' + f + '</span>').join('') + '</div>' : '') +
+        '</div>';
+    }
+
+    function waybillPage(r) {
+        const base = publicBase();
+        const qr = base && r.public_token ? qrSvg(base + '#t=' + r.public_token) : '';
+        return '<div class="wb-page">' + waybillCopy(r, 'نسخة المستلم', qr) + '<div class="wb-cut"><span>✂</span></div>' + waybillCopy(r, 'نسخة الريف (الأرشيف)', qr) + '</div>';
+    }
+
+    let wbCurrent = null;
+
+    function fitWb() {
+        const wrap = $('wb-wrap');
+        if (!wrap) return;
+        const scale = Math.max(0.25, Math.min((window.innerWidth - 70) / A4_W_PX, (window.innerHeight - 190) / A4_H_PX, 1));
+        wrap.style.width = (A4_W_PX * scale) + 'px';
+        wrap.style.height = (A4_H_PX * scale) + 'px';
+        $('wb-scaler').style.transform = 'scale(' + scale + ')';
+    }
+
+    function openWaybill(id) {
+        const r = mgr.rows.find((x) => x.id === id);
+        if (!r) return;
+        wbCurrent = r;
+        const html = waybillPage(r);
+        $('wb-scaler').innerHTML = html;
+        $('wb-print-root').innerHTML = html;
+        $('wb-title').textContent = 'بوليصة الشحنة ' + r.tracking_number;
+        $('wb-modal').hidden = false;
+        document.body.classList.add('no-scroll');
+        fitWb();
+    }
+    function closeWaybill() {
+        $('wb-modal').hidden = true;
+        document.body.classList.remove('no-scroll');
+    }
+    function printWaybill() {
+        if (!wbCurrent) return;
+        document.body.classList.add('printing-waybill');
+        window.print();
+    }
+    function editFromWaybill() {
+        if (!wbCurrent) return;
+        const id = wbCurrent.id;
+        closeWaybill();
+        openShipmentLabel(id);
+        $('wb-fields').open = true;
+    }
+    function copyWaybillLink() {
+        if (wbCurrent) copyText(publicBase() + '#t=' + wbCurrent.public_token, 'تم نسخ رابط التتبع');
+    }
+
+    function clearExtras() { EXTRA_IDS.forEach((id) => { $(id).value = ''; }); }
+
     let appStarted = false;
     function enterApp(freshCode) {
         if (appStarted) return;
@@ -1994,6 +2287,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         if (e.key === 'Escape') {
             if (!$('zoom-overlay').hidden) closeZoom();
             if (!$('events-modal').hidden) closeEvents();
+            if (!$('wb-modal').hidden) closeWaybill();
             return;
         }
         if (e.key !== 'Enter' || !e.target.classList || !e.target.classList.contains('js-field')) return;
@@ -2010,8 +2304,8 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
         if (d) removeHistory(+d.dataset.histDel);
     });
     window.addEventListener('beforeprint', fitAll);
-    window.addEventListener('afterprint', () => { if (offlineMode) { offlineMode = false; updateLabel(); } });
-    window.addEventListener('resize', () => { if (appStarted) fitPreview(); });
+    window.addEventListener('afterprint', () => { document.body.classList.remove('printing-waybill'); if (offlineMode) { offlineMode = false; updateLabel(); } });
+    window.addEventListener('resize', () => { if (appStarted) fitPreview(); if (!$('wb-modal').hidden) fitWb(); });
 
     document.addEventListener('DOMContentLoaded', () => {
         $('app-favicon').href = HEADER_LOGO_SRC;
